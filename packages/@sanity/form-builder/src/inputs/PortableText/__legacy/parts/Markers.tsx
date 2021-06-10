@@ -1,8 +1,8 @@
 import React from 'react'
 import {Path, Marker, isValidationMarker} from '@sanity/types'
 import {FormFieldValidationStatus} from '@sanity/base/components'
-import {CustomMarkers} from '../../legacyParts'
-import {RenderCustomMarkers} from './types'
+import {CustomMarkers} from '../../../../legacyParts'
+import {RenderCustomMarkers} from '../../types'
 import styles from './Markers.css'
 
 type Props = {

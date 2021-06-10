@@ -18,6 +18,7 @@ import {Path, isKeySegment, Marker, isKeyedObject} from '@sanity/types'
 import {BoundaryElementProvider, Layer, Portal, PortalProvider} from '@sanity/ui'
 import {uniqueId, isEqual} from 'lodash'
 import {useZIndex, ChangeIndicatorWithProvidedFullPath} from '@sanity/base/components'
+import {BlockExtras} from '../../legacyParts'
 import {ActivateOnFocus} from '../../transitional/ActivateOnFocus'
 import {EMPTY_ARRAY} from '../../utils/empty'
 import PatchEvent from '../../../PatchEvent'
@@ -29,7 +30,6 @@ import {Blockquote, Header, Paragraph} from './textBlock'
 import {Annotation} from './textSpan'
 import {RenderBlockActions, RenderCustomMarkers, ObjectEditData} from './types'
 import PortableTextSanityEditor from './Editor'
-import BlockExtras from './BlockExtras'
 
 type Props = {
   focusPath: Path

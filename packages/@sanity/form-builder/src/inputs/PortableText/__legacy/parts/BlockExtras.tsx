@@ -8,11 +8,11 @@ import {
   PortableTextFeatures,
   usePortableTextEditor,
 } from '@sanity/portable-text-editor'
-import {Markers} from '../../legacyParts'
-import PatchEvent from '../../PatchEvent'
-import {RenderBlockActions, RenderCustomMarkers} from './types'
+import {Markers} from '../../../../legacyParts'
+import PatchEvent from '../../../../PatchEvent'
+import {RenderBlockActions, RenderCustomMarkers} from '../../types'
+import createBlockActionPatchFn from '../../utils/createBlockActionPatchFn'
 import styles from './BlockExtras.css'
-import createBlockActionPatchFn from './utils/createBlockActionPatchFn'
 
 type Props = {
   block: PortableTextBlock
