@@ -23,7 +23,7 @@ import styles from './PortableTextInput.css'
 import Toolbar from './Toolbar/Toolbar'
 import {ExpandCollapseButton} from './expandCollapseButton'
 import {RenderBlockActions, RenderCustomMarkers} from './types'
-import Decorator from './Text/Decorator'
+import {Decorator} from './textSpan'
 
 type Props = {
   initialSelection?: EditorSelection
