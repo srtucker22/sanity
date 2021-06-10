@@ -158,18 +158,21 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
   }, [ref])
 
   // Render error message and resolution
-  let respondToInvalidContent = null
-  if (invalidValue) {
-    respondToInvalidContent = (
-      <Box marginBottom={2}>
-        <RespondToInvalidContent
-          onChange={handleEditorChange}
-          onIgnore={handleIgnoreValidation}
-          resolution={invalidValue.resolution}
-        />
-      </Box>
-    )
-  }
+  const respondToInvalidContent = useMemo(() => {
+    if (invalidValue) {
+      return (
+        <Box marginBottom={2}>
+          <RespondToInvalidContent
+            onChange={handleEditorChange}
+            onIgnore={handleIgnoreValidation}
+            resolution={invalidValue.resolution}
+          />
+        </Box>
+      )
+    }
+
+    return null
+  }, [handleEditorChange, handleIgnoreValidation, invalidValue])
 
   const [isFullscreen, setIsFullscreen] = useState(false)
   const handleToggleFullscreen = useCallback(() => setIsFullscreen(!isFullscreen), [isFullscreen])
@@ -245,6 +248,7 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
       value,
     ]
   )
+
   return (
     <>
       {invalidValue && !ignoreValidationError && respondToInvalidContent}

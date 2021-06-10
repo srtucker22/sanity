@@ -23,6 +23,7 @@ export const MenuItem: FunctionComponent<DropDownMenuItemProps> = ({
   params,
 }): JSX.Element => {
   const Icon = icon
+
   return (
     <div className={color === 'danger' ? styles.menuItemDanger : styles.menuItem}>
       {intent ? (

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, {FunctionComponent, SyntheticEvent} from 'react'
+import React, {FunctionComponent, SyntheticEvent, useMemo} from 'react'
 import classNames from 'classnames'
 import {PortableTextChild, Type, RenderAttributes} from '@sanity/portable-text-editor'
 
@@ -35,13 +35,17 @@ export const Annotation: FunctionComponent<Props> = ({
     errors.length > 0 ? styles.error : styles.valid,
   ])
 
-  const markDefPath = [...path.slice(0, 1), 'markDefs', {_key: value._key}]
+  const markDefPath = useMemo(() => [...path.slice(0, 1), 'markDefs', {_key: value._key}], [
+    path,
+    value,
+  ])
 
   const handleOpen = (event: SyntheticEvent<HTMLSpanElement>): void => {
     event.preventDefault()
     event.stopPropagation()
     onFocus(markDefPath.concat(FOCUS_TERMINATOR))
   }
+
   return (
     <span className={classnames} onClick={handleOpen}>
       {children}

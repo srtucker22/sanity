@@ -146,6 +146,7 @@ export const EditObject = ({
       />
     )
   }
+
   if (
     editModalLayout === 'popover' ||
     (kind === 'annotation' && typeof editModalLayout === 'undefined')
@@ -167,6 +168,7 @@ export const EditObject = ({
       />
     )
   }
+
   return (
     <DefaultObjectEditing
       focusPath={focusPath}

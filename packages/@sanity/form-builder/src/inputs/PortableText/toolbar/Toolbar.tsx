@@ -39,6 +39,7 @@ function PTEToolbar(props: Props) {
   const resolveInitialValue = useCallback(
     (type: Type) => {
       let isSlow = false
+
       const slowTimer = setTimeout(() => {
         isSlow = true
         toast.push({
@@ -47,6 +48,7 @@ function PTEToolbar(props: Props) {
           title: 'Resolving initial value…',
         })
       }, SLOW_INITIAL_VALUE_LIMIT)
+
       return resolveInitialValueForType((type as any) as SchemaType)
         .then((value) => {
           if (isSlow) {
@@ -100,6 +102,7 @@ function PTEToolbar(props: Props) {
       const initialValue = await resolveInitialValue(type)
 
       const paths = PortableTextEditor.addAnnotation(editor, type, initialValue)
+
       if (paths && paths.markDefPath) {
         onFocus(paths.markDefPath.concat(FOCUS_TERMINATOR))
       }
@@ -112,8 +115,13 @@ function PTEToolbar(props: Props) {
       editor ? getPTEToolbarActionGroups(editor, selection, handleInsertAnnotation, hotkeys) : [],
     [editor, selection, handleInsertAnnotation, hotkeys]
   )
+
   const actionsLen = actionGroups.reduce((acc, x) => acc + x.actions.length, 0)
-  const blockStyleSelectProps = editor ? getBlockStyleSelectProps(editor) : null
+
+  const blockStyleSelectProps = useMemo(
+    () => (editor ? getBlockStyleSelectProps(editor, selection) : null),
+    [editor, selection]
+  )
 
   const insertMenuItems = React.useMemo(
     () =>
@@ -123,7 +131,7 @@ function PTEToolbar(props: Props) {
 
   return (
     <Card
-      // Ensure the editor doesn't lose focus when interacting
+      // NOTE: Ensure the editor doesn't lose focus when interacting
       // with the toolbar (prevent focus click events)
       onMouseDown={preventDefault}
       onKeyPress={preventDefault}

@@ -4,6 +4,7 @@ import styles from './Blockquote.css'
 type Props = {
   children: React.ReactNode
 }
+
 export default function Blockquote(props: Props) {
   return (
     <div className={styles.root}>

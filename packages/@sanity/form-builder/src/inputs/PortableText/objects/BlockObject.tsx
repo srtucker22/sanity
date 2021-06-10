@@ -97,6 +97,7 @@ export const BlockObject: FunctionComponent<Props> = ({
       />
     )
   }, [type, value, path, readOnly, onFocus, handleDelete, handleEdit])
+
   return (
     <div className={classnames} ref={elementRef} onDoubleClick={handleClickToOpen}>
       <div className={styles.previewContainer} style={readOnly ? {cursor: 'default'} : {}}>

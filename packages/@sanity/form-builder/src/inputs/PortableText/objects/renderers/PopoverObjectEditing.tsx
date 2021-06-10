@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, {FunctionComponent, useEffect, useState} from 'react'
+import React, {FunctionComponent, useCallback, useEffect, useState} from 'react'
 
 import {
   PortableTextBlock,
@@ -44,16 +44,22 @@ export const PopoverObjectEditing: FunctionComponent<Props> = ({
   type,
 }) => {
   const editor = usePortableTextEditor()
-  const handleChange = (patchEvent: PatchEvent): void => onChange(patchEvent, path)
-  const getEditorElement = () => {
+
+  const handleChange = useCallback((patchEvent: PatchEvent): void => onChange(patchEvent, path), [
+    onChange,
+    path,
+  ])
+
+  const getEditorElement = useCallback(() => {
     const [editorObject] = PortableTextEditor.findByPath(editor, editorPath)
     return PortableTextEditor.findDOMNode(editor, editorObject) as HTMLElement
-  }
-  const [refElement, setRefElement] = useState(getEditorElement())
+  }, [editor, editorPath])
+
+  const [refElement, setRefElement] = useState(getEditorElement)
 
   useEffect(() => {
     setRefElement(getEditorElement())
-  }, [object])
+  }, [getEditorElement])
 
   return (
     <PopoverDialog
