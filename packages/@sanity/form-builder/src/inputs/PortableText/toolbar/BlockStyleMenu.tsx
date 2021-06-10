@@ -5,7 +5,7 @@ import {
   usePortableTextEditor,
   usePortableTextEditorSelection,
 } from '@sanity/portable-text-editor'
-import {Box, Button, Flex, Menu, MenuButton, MenuItem, Text} from '@sanity/ui'
+import {Box, Button, Flex, Menu, MenuButton, MenuItem, PopoverProps, Text} from '@sanity/ui'
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {BlockStyleItem} from './types'
 
@@ -55,11 +55,20 @@ export function BlockStyleMenu(props: BlockStyleMenuProps) {
 
   const currentTitle = value && value.length > 0 && value[0].title
 
+  const popoverProps: PopoverProps = useMemo(
+    () => ({
+      constrainSize: true,
+      portal: true,
+      preventOverflow: true,
+    }),
+    []
+  )
+
   return (
     <MenuButton
       button={
-        <Button disabled={readOnly || disabled || _disabled} mode="bleed">
-          <Flex padding={2}>
+        <Button disabled={readOnly || disabled || _disabled} mode="bleed" padding={2}>
+          <Flex>
             <Box flex={1}>
               <Text>{currentTitle || <>(none)</>}</Text>
             </Box>
@@ -74,24 +83,18 @@ export function BlockStyleMenu(props: BlockStyleMenuProps) {
       id="block-style-menu"
       menu={
         <Menu>
-          {items.map((item) => {
-            return (
-              <BlockStyleMenuItem
-                item={item}
-                key={item.key}
-                onChange={handleChange}
-                renderBlock={renderBlock}
-                selected={item === value[0]}
-              />
-            )
-          })}
+          {items.map((item) => (
+            <BlockStyleMenuItem
+              item={item}
+              key={item.key}
+              onChange={handleChange}
+              renderBlock={renderBlock}
+              selected={item === value[0]}
+            />
+          ))}
         </Menu>
       }
-      popover={{
-        constrainSize: true,
-        preventOverflow: true,
-      }}
-      portal
+      popover={popoverProps}
     />
   )
 }
@@ -151,8 +154,8 @@ function BlockStyleMenuItem({
   const handleClick = useCallback(() => onChange(item), [item, onChange])
 
   return (
-    <MenuItem onClick={handleClick} selected={selected}>
-      <Box paddingX={3}>{blockNode}</Box>
+    <MenuItem onClick={handleClick} padding={0} selected={selected}>
+      {blockNode}
     </MenuItem>
   )
 }
