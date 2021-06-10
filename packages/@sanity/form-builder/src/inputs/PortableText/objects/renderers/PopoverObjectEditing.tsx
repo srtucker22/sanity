@@ -11,7 +11,7 @@ import {
 import {FormFieldPresence, PresenceOverlay} from '@sanity/base/presence'
 import {Path, Marker, SchemaType} from '@sanity/types'
 import {FormBuilderInput} from '../../../../FormBuilderInput'
-import {PatchEvent} from '../../../../../PatchEvent'
+import {PatchEvent} from '../../../../PatchEvent'
 import {PopoverDialog} from '../../../../transitional/PopoverDialog'
 
 interface Props {

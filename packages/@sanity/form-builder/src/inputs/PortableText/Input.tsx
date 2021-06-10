@@ -21,7 +21,7 @@ import {useZIndex, ChangeIndicatorWithProvidedFullPath} from '@sanity/base/compo
 import {BlockExtras} from '../../legacyParts'
 import {ActivateOnFocus} from '../../transitional/ActivateOnFocus'
 import {EMPTY_ARRAY} from '../../utils/empty'
-import PatchEvent from '../../../PatchEvent'
+import PatchEvent from '../../PatchEvent'
 import styles from './PortableTextInput.css'
 import {BlockObject} from './objects/BlockObject'
 import {InlineObject} from './objects/InlineObject'

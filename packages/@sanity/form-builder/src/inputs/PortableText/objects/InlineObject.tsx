@@ -7,7 +7,7 @@ import {Path} from '@sanity/types'
 
 import {FOCUS_TERMINATOR} from '@sanity/util/paths'
 import Preview from '../../../Preview'
-import {PatchEvent} from '../../../../PatchEvent'
+import {PatchEvent} from '../../../PatchEvent'
 
 import styles from './InlineObject.css'
 
