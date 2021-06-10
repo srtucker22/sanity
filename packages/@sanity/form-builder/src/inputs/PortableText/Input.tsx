@@ -26,7 +26,7 @@ import styles from './PortableTextInput.css'
 import {BlockObject} from './objects/BlockObject'
 import {InlineObject} from './objects/InlineObject'
 import {EditObject} from './objects/EditObject'
-import {Blockquote, Header, Paragraph} from './textBlock'
+import {TextBlock} from './textBlock'
 import {Annotation} from './textSpan'
 import {RenderBlockActions, RenderCustomMarkers, ObjectEditData} from './types'
 import PortableTextSanityEditor from './Editor'
@@ -231,48 +231,48 @@ export default function PortableTextInput(props: Props) {
       const blockMarkers = markers.filter(
         (marker) => isKeySegment(marker.path[0]) && marker.path[0]._key === block._key
       )
-      let renderedBlock = defaultRender(block)
+
+      const blockExtras = (
+        <BlockExtras
+          block={block}
+          markers={blockMarkers}
+          onChange={onChange}
+          onFocus={onFocus}
+          portableTextFeatures={ptFeatures}
+          showChangeIndicator={isFullscreen}
+          renderBlockActions={renderBlockActions}
+          renderCustomMarkers={renderCustomMarkers}
+          value={value}
+        />
+      )
+
       // Text blocks
       if (block._type === blockTypeName) {
-        // Deal with block style
-        if (block.style === 'blockquote') {
-          renderedBlock = <Blockquote>{renderedBlock}</Blockquote>
-        } else if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(block.style)) {
-          renderedBlock = <Header block={block}>{renderedBlock}</Header>
-        } else {
-          renderedBlock = <Paragraph>{renderedBlock}</Paragraph>
-        }
-      } else {
-        // Object blocks
-        renderedBlock = (
-          <BlockObject
-            attributes={attributes}
-            editor={editor}
-            markers={blockMarkers}
-            onChange={handleFormBuilderEditObjectChange}
-            focusPath={focusPath || EMPTY_ARRAY}
-            onFocus={onFocus}
-            readOnly={readOnly}
-            type={blockType}
-            value={block}
-          />
+        return (
+          <TextBlock
+            blockExtras={blockExtras}
+            level={attributes.level}
+            listItem={block.listItem}
+            style={block.style}
+          >
+            {defaultRender(block)}
+          </TextBlock>
         )
       }
+
       return (
-        <>
-          <BlockExtras
-            block={block}
-            markers={blockMarkers}
-            onChange={onChange}
-            onFocus={onFocus}
-            portableTextFeatures={ptFeatures}
-            showChangeIndicator={isFullscreen}
-            renderBlockActions={renderBlockActions}
-            renderCustomMarkers={renderCustomMarkers}
-            value={value}
-          />
-          {renderedBlock}
-        </>
+        <BlockObject
+          attributes={attributes}
+          blockExtras={blockExtras}
+          editor={editor}
+          markers={blockMarkers}
+          onChange={handleFormBuilderEditObjectChange}
+          focusPath={focusPath || EMPTY_ARRAY}
+          onFocus={onFocus}
+          readOnly={readOnly}
+          type={blockType}
+          value={block}
+        />
       )
     },
     [

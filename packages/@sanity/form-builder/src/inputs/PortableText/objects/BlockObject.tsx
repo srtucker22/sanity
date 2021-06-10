@@ -19,6 +19,7 @@ import styles from './BlockObject.css'
 
 type Props = {
   attributes: RenderAttributes
+  blockExtras?: React.ReactNode
   editor: PortableTextEditor
   markers: Marker[]
   onChange: (patchEvent: PatchEvent, path: Path) => void
@@ -31,6 +32,7 @@ type Props = {
 
 export const BlockObject: FunctionComponent<Props> = ({
   attributes: {focused, selected, path},
+  blockExtras,
   editor,
   markers,
   focusPath,
@@ -103,6 +105,8 @@ export const BlockObject: FunctionComponent<Props> = ({
       <div className={styles.previewContainer} style={readOnly ? {cursor: 'default'} : {}}>
         {blockPreview}
       </div>
+
+      {blockExtras}
     </div>
   )
 }
