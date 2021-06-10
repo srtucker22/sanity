@@ -24,6 +24,7 @@ import {
 
 import {get} from 'lodash'
 import React from 'react'
+import {SchemaType} from '@sanity/types'
 import CustomIcon from './CustomIcon'
 import {BlockItem, BlockStyleItem, PTEToolbarAction, PTEToolbarActionGroup} from './types'
 
@@ -157,7 +158,7 @@ function getAnnotationIcon(item: PortableTextFeature, active: boolean): React.Co
 
 function getPTEAnnotationActions(
   editor: PortableTextEditor,
-  onInsert: (type: Type) => void
+  onInsert: (type: SchemaType) => void
 ): PTEToolbarAction[] {
   const features = PortableTextEditor.getPortableTextFeatures(editor)
   const activeAnnotations = PortableTextEditor.activeAnnotations(editor)
@@ -177,7 +178,7 @@ function getPTEAnnotationActions(
           PortableTextEditor.removeAnnotation(editor, item.type)
           PortableTextEditor.focus(editor)
         } else {
-          onInsert(item.type)
+          onInsert(item.type as SchemaType)
         }
       },
       title: item.title,
@@ -188,7 +189,7 @@ function getPTEAnnotationActions(
 export function getPTEToolbarActionGroups(
   editor: PortableTextEditor,
   selection: EditorSelection,
-  onInsertAnnotation: (type: Type) => void,
+  onInsertAnnotation: (type: SchemaType) => void,
   hotkeyOpts: HotkeyOptions
 ): PTEToolbarActionGroup[] {
   return [
@@ -201,6 +202,7 @@ export function getPTEToolbarActionGroups(
 export function getBlockStyleSelectProps(
   editor: PortableTextEditor,
   // NOTE: this is unused, but required to make the value change in the toolbar
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _selection: EditorSelection
 ): {items: BlockStyleItem[]; value: BlockStyleItem[]} {
   const features = PortableTextEditor.getPortableTextFeatures(editor)

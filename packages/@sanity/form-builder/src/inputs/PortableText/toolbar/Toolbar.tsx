@@ -3,7 +3,7 @@ import {
   RenderBlockFunction,
   usePortableTextEditor,
   usePortableTextEditorSelection,
-  Type,
+  Type as PTSchemaType,
   PortableTextEditor,
 } from '@sanity/portable-text-editor'
 import React, {useMemo, useCallback} from 'react'
@@ -18,7 +18,7 @@ import {BlockStyleMenu} from './BlockStyleMenu'
 
 const SLOW_INITIAL_VALUE_LIMIT = 300
 
-const preventDefault = (event) => event.preventDefault()
+const preventDefault = (event: React.SyntheticEvent<HTMLElement>) => event.preventDefault()
 
 interface Props {
   hotkeys: HotkeyOptions
@@ -37,7 +37,7 @@ function PTEToolbar(props: Props) {
   const toast = useToast()
 
   const resolveInitialValue = useCallback(
-    (type: Type) => {
+    (type: SchemaType) => {
       let isSlow = false
 
       const slowTimer = setTimeout(() => {
@@ -49,7 +49,7 @@ function PTEToolbar(props: Props) {
         })
       }, SLOW_INITIAL_VALUE_LIMIT)
 
-      return resolveInitialValueForType((type as any) as SchemaType)
+      return resolveInitialValueForType(type as SchemaType)
         .then((value) => {
           if (isSlow) {
             // I found no way to close an existing toast, so this will replace the message in the
@@ -78,8 +78,8 @@ function PTEToolbar(props: Props) {
   )
 
   const handleInsertBlock = useCallback(
-    async (type: Type) => {
-      const initialValue = await resolveInitialValue(type)
+    async (type: PTSchemaType) => {
+      const initialValue = await resolveInitialValue(type as SchemaType)
       const path = PortableTextEditor.insertBlock(editor, type, initialValue)
 
       setTimeout(() => onFocus(path.concat(FOCUS_TERMINATOR)), 0)
@@ -88,8 +88,8 @@ function PTEToolbar(props: Props) {
   )
 
   const handleInsertInline = useCallback(
-    async (type: Type) => {
-      const initialValue = await resolveInitialValue(type)
+    async (type: PTSchemaType) => {
+      const initialValue = await resolveInitialValue(type as SchemaType)
       const path = PortableTextEditor.insertChild(editor, type, initialValue)
 
       setTimeout(() => onFocus(path.concat(FOCUS_TERMINATOR)), 0)
@@ -98,10 +98,10 @@ function PTEToolbar(props: Props) {
   )
 
   const handleInsertAnnotation = useCallback(
-    async (type: Type) => {
+    async (type: SchemaType) => {
       const initialValue = await resolveInitialValue(type)
 
-      const paths = PortableTextEditor.addAnnotation(editor, type, initialValue)
+      const paths = PortableTextEditor.addAnnotation(editor, type as PTSchemaType, initialValue)
 
       if (paths && paths.markDefPath) {
         onFocus(paths.markDefPath.concat(FOCUS_TERMINATOR))

@@ -11,7 +11,7 @@ export type DropDownMenuItemProps = {
   icon: React.ComponentType
   color?: string
   intent?: 'edit' | string
-  params?: Record<string, any>
+  params?: Record<string, unknown>
   name?: string
 }
 

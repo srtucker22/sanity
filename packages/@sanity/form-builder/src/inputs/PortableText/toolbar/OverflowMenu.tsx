@@ -148,6 +148,7 @@ export function OverflowMenu(props: Props) {
                   <MenuItem
                     disabled={action.disabled || disabled}
                     icon={action.icon}
+                    // eslint-disable-next-line react/no-array-index-key
                     key={hiddenActionIndex}
                     onClick={handleClick}
                     selected={action.active}

@@ -52,6 +52,7 @@ export const PopoverObjectEditing: FunctionComponent<Props> = ({
 
   const getEditorElement = useCallback(() => {
     const [editorObject] = PortableTextEditor.findByPath(editor, editorPath)
+    // eslint-disable-next-line react/no-find-dom-node
     return PortableTextEditor.findDOMNode(editor, editorObject) as HTMLElement
   }, [editor, editorPath])
 

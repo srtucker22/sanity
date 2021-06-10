@@ -81,7 +81,7 @@ export default function PortableTextInput(props: Props) {
 
   // States
   const [isActive, setIsActive] = useState(false)
-  const [objectEditData, setObjectEditData]: [ObjectEditData, any] = useState(null)
+  const [objectEditData, setObjectEditData] = useState<ObjectEditData | null>(null)
   const [initialSelection, setInitialSelection] = useState(undefined)
 
   // Respond to focusPath changes
@@ -129,7 +129,7 @@ export default function PortableTextInput(props: Props) {
       }
       // Block focus paths
       if (focusPath && ((isChild && focusPath.length > 3) || (!isChild && focusPath.length > 1))) {
-        let kind = 'blockObject'
+        let kind: 'blockObject' | 'inlineObject' = 'blockObject'
         let path = focusPath.slice(0, 1)
         if (isChild) {
           kind = 'inlineObject'

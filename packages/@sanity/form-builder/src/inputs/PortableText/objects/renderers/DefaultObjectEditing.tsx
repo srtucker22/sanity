@@ -35,7 +35,11 @@ export function DefaultObjectEditing(props: Props) {
     readOnly,
     type,
   } = props
-  const handleChange = useCallback((patchEvent: PatchEvent): void => onChange(patchEvent, path), [])
+
+  const handleChange = useCallback((patchEvent: PatchEvent): void => onChange(patchEvent, path), [
+    onChange,
+    path,
+  ])
 
   return (
     <DefaultDialog

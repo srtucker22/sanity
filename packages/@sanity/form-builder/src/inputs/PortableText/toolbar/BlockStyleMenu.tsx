@@ -23,7 +23,12 @@ export function BlockStyleMenu(props: BlockStyleMenuProps) {
   const ptFeatures = useMemo(() => PortableTextEditor.getPortableTextFeatures(editor), [editor])
   const blockType = useMemo(() => ptFeatures.types.block, [ptFeatures])
   const selection = usePortableTextEditorSelection()
-  const focusBlock = useMemo(() => PortableTextEditor.focusBlock(editor), [editor, selection])
+  const focusBlock = useMemo(() => {
+    if (selection) {
+      // This is a "hack" to make the `focusBlock` value change whenver `selection` changes
+    }
+    return PortableTextEditor.focusBlock(editor)
+  }, [editor, selection])
   const [changed, setChanged] = useState(false)
 
   // @todo: Document what's going on here

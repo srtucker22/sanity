@@ -110,7 +110,8 @@ function PortableTextSanityEditor(props: Props) {
     () => ({
       custom: {
         'mod+enter': props.onToggleFullscreen,
-        // 'mod+o': handleOpenObjectHotkey, // TODO: disabled for now, enable when we agree on the hotkey
+        // TODO: disabled for now, enable when we agree on the hotkey
+        // 'mod+o': handleOpenObjectHotkey,
         ...(props.hotkeys || {}).custom,
       },
     }),

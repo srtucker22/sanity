@@ -51,7 +51,8 @@ export const InlineObject: FunctionComponent<Props> = ({
       <span className={classnames} onClick={handleOpen}>
         <span
           className={styles.previewContainer}
-          style={readOnly ? {cursor: 'default'} : {}} // TODO: Probably move to styles aka. className?
+          // TODO: Probably move to styles aka. className?
+          style={readOnly ? {cursor: 'default'} : {}}
         >
           {!isEmpty && <Preview type={type} value={value} layout="inline" />}
           {isEmpty && !readOnly && <span>Click to edit</span>}
