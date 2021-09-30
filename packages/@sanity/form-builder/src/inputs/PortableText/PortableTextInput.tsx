@@ -77,18 +77,24 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
     subscribe,
   } = props
 
+  const [hasFocus, setHasFocus] = useState(false)
+  const [ignoreValidationError, setIgnoreValidationError] = useState(false)
+  const [invalidValue, setInvalidValue] = useState(null)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
   const toast = useToast()
 
+  const editorId = useMemo(() => uniqueId('PortableTextInputRoot'), [])
+  const patches$: Subject<EditorPatch> = useMemo(() => new Subject(), [])
+
+  const handleToggleFullscreen = useCallback(() => setIsFullscreen(!isFullscreen), [isFullscreen])
+
   // Reset invalidValue if new value is coming in from props
-  const [invalidValue, setInvalidValue] = useState(null)
   useEffect(() => {
     if (invalidValue && value !== invalidValue.value) {
       setInvalidValue(null)
     }
   }, [invalidValue, value])
-
-  // Memoized patch stream
-  const patches$: Subject<EditorPatch> = useMemo(() => new Subject(), [])
 
   // Handle incoming patches from withPatchSubscriber HOC
   const handleDocumentPatches = useCallback(
@@ -109,7 +115,6 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
   }, [handleDocumentPatches, subscribe])
 
   // Handle editor changes
-  const [hasFocus, setHasFocus] = useState(false)
   const handleEditorChange = useCallback(
     (change: EditorChange): void => {
       switch (change.type) {
@@ -144,29 +149,6 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
     [onChange, toast]
   )
 
-  const [ignoreValidationError, setIgnoreValidationError] = useState(false)
-
-  const handleIgnoreValidation = useCallback((): void => {
-    setIgnoreValidationError(true)
-  }, [])
-
-  // Render error message and resolution
-  let respondToInvalidContent = null
-  if (invalidValue) {
-    respondToInvalidContent = (
-      <Box marginBottom={2}>
-        <RespondToInvalidContent
-          onChange={handleEditorChange}
-          onIgnore={handleIgnoreValidation}
-          resolution={invalidValue.resolution}
-        />
-      </Box>
-    )
-  }
-
-  const [isFullscreen, setIsFullscreen] = useState(false)
-  const handleToggleFullscreen = useCallback(() => setIsFullscreen(!isFullscreen), [isFullscreen])
-  const editorId = useMemo(() => uniqueId('PortableTextInputRoot'), [])
   const focusSkipperButton = useMemo(() => {
     const handleFocusSkipperClicked = () => {
       if (ref.current) {
@@ -180,6 +162,7 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
       </VisibleOnFocusButton>
     )
   }, [ref])
+
   const editorInput = useMemo(
     () => (
       <PortableTextEditor
@@ -242,14 +225,34 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
     ]
   )
 
+  const handleIgnoreValidation = useCallback((): void => {
+    setIgnoreValidationError(true)
+  }, [])
+
+  const respondToInvalidContent = useMemo(() => {
+    if (invalidValue) {
+      return (
+        <Box marginBottom={2}>
+          <RespondToInvalidContent
+            onChange={handleEditorChange}
+            onIgnore={handleIgnoreValidation}
+            resolution={invalidValue.resolution}
+          />
+        </Box>
+      )
+    }
+    return null
+  }, [handleEditorChange, handleIgnoreValidation, invalidValue])
+
   return (
     <>
-      {invalidValue && !ignoreValidationError && respondToInvalidContent}
+      {!ignoreValidationError && respondToInvalidContent}
       {(!invalidValue || ignoreValidationError) && editorInput}
     </>
   )
 })
 
+// An outer React Component with blur and focus class methods for the form-builder to call
 export default (withPatchSubscriber(
   class PortableTextInputWithFocusAndBlur extends React.Component<
     Props & {children: React.ReactNode}
