@@ -36,7 +36,7 @@ type PatchSubscriber = ({
   snapshot: PortableTextBlock[] | undefined
 }) => void
 
-type Props = {
+export type PortableTextInputProps = {
   focusPath: Path
   hotkeys?: HotkeyOptions
   level: number
@@ -56,7 +56,7 @@ type Props = {
 }
 
 const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
-  props: Omit<Props, 'level'>,
+  props: Omit<PortableTextInputProps, 'level'>,
   ref: React.RefObject<PortableTextEditor>
 ) {
   const {
@@ -254,7 +254,7 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
 
 export default (withPatchSubscriber(
   class PortableTextInputWithFocusAndBlur extends React.Component<
-    Props & {children: React.ReactNode}
+    PortableTextInputProps & {children: React.ReactNode}
   > {
     editorRef: React.RefObject<PortableTextEditor> = React.createRef()
     focus() {
@@ -283,4 +283,4 @@ export default (withPatchSubscriber(
       )
     }
   }
-) as React.ComponentType) as React.ComponentType<Props>
+) as React.ComponentType) as React.ComponentType<PortableTextInputProps>
