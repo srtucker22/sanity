@@ -213,12 +213,15 @@ export function createWithHotkeys(
       }
 
       // Undo/redo
-      if (isHotkey('mod+z', event.nativeEvent)) {
+      if (isHotkey('mod+z', event.nativeEvent) && editor.undo) {
         event.preventDefault()
         editor.undo()
         return
       }
-      if (isHotkey('mod+y', event.nativeEvent) || isHotkey('mod+shift+z', event.nativeEvent)) {
+      if (
+        (isHotkey('mod+y', event.nativeEvent) || isHotkey('mod+shift+z', event.nativeEvent)) &&
+        editor.redo
+      ) {
         event.preventDefault()
         editor.redo()
       }

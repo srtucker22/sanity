@@ -162,7 +162,6 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
       </VisibleOnFocusButton>
     )
   }, [ref])
-
   const editorInput = useMemo(
     () => (
       <PortableTextEditor

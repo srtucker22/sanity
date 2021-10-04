@@ -194,7 +194,7 @@ export class PortableTextEditor extends React.Component<PortableTextEditorProps,
       typeof props.maxBlocks === 'undefined'
         ? undefined
         : parseInt(props.maxBlocks.toString(), 10) || undefined
-    this.readOnly = props.readOnly || false
+    this.readOnly = !!(props.readOnly || false)
     this.state = state
     this.slateInstance = withPortableText(createEditor(), {
       portableTextFeatures: this.portableTextFeatures,
@@ -202,7 +202,7 @@ export class PortableTextEditor extends React.Component<PortableTextEditorProps,
       change$: this.change$,
       maxBlocks: this.maxBlocks,
       incomingPatches$: this.incomingPatches$,
-      readOnly: !!this.props.readOnly,
+      readOnly: this.readOnly,
     })
   }
 
@@ -211,8 +211,41 @@ export class PortableTextEditor extends React.Component<PortableTextEditorProps,
     this.changeSubscription.unsubscribe()
   }
 
+  updateSlateInstance() {
+    this.slateInstance = withPortableText(this.slateInstance, {
+      portableTextFeatures: this.portableTextFeatures,
+      keyGenerator: this.keyGenerator,
+      change$: this.change$,
+      maxBlocks: this.maxBlocks,
+      incomingPatches$: this.incomingPatches$,
+      readOnly: this.readOnly,
+    })
+  }
+
   componentDidUpdate(prevProps: PortableTextEditorProps) {
-    this.readOnly = this.props.readOnly || false
+    let updateInstance = false
+    if (this.props.readOnly !== prevProps.readOnly) {
+      this.readOnly = !!(this.props.readOnly || false)
+      updateInstance = true
+    }
+    if (this.props.keyGenerator !== prevProps.keyGenerator) {
+      this.keyGenerator = this.props.keyGenerator || defaultKeyGenerator
+      updateInstance = true
+    }
+    if (this.props.incomingPatches$ !== prevProps.incomingPatches$) {
+      this.incomingPatches$ = this.props.incomingPatches$
+      updateInstance = true
+    }
+    if (this.props.type !== prevProps.type && this.props.type) {
+      this.type = this.props.type.hasOwnProperty('jsonType')
+        ? this.props.type
+        : compileType(this.props.type)
+      this.portableTextFeatures = getPortableTextFeatures(this.type)
+      updateInstance = true
+    }
+    if (updateInstance) {
+      this.updateSlateInstance()
+    }
     // Validate again if value length has changed
     if (this.props.value && (prevProps.value || []).length !== this.props.value.length) {
       debug('Validating')
