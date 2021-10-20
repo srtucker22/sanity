@@ -39,7 +39,7 @@ const Root = styled(Card)((props: {theme: Theme}) => {
     left: -4px;
     right: -4px;
     border-radius: ${radius[2]}px;
-    mix-blend-mode: multiply;
+    mix-blend-mode: ${color.dark ? 'screen' : 'multiply'};
   `
 
   return css`
