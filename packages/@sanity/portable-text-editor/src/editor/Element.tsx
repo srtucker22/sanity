@@ -45,7 +45,7 @@ export const Element: FunctionComponent<ElementProps> = ({
 }) => {
   const editor = useEditor()
   const selected = useSelected()
-  const blockRef = useRef(null)
+  const blockRef = useRef<HTMLDivElement | null>(null)
   const inlineBlockObjectRef = useRef(null)
   const focused = (selected && editor.selection && Range.isCollapsed(editor.selection)) || false
   let className
@@ -172,9 +172,10 @@ export const Element: FunctionComponent<ElementProps> = ({
   )[0]
   const renderedBlockFromProps =
     renderBlock && renderBlock(block, type, renderAttribs, defaultRender, blockRef)
+
   return (
     <div {...attributes} key={element._key} className={className}>
-      <DraggableBlock element={element} readOnly={readOnly}>
+      <DraggableBlock element={element} readOnly={readOnly} blockRef={blockRef}>
         {renderedBlockFromProps && (
           <div ref={blockRef} contentEditable={false}>
             {renderedBlockFromProps}

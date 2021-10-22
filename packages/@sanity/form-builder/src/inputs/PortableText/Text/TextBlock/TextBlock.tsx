@@ -1,7 +1,12 @@
 import React, {useMemo} from 'react'
-import {Box, rem, ResponsivePaddingProps, Theme} from '@sanity/ui'
+import {Box, Flex, rem, ResponsivePaddingProps, Stack, Theme, Tooltip, Text} from '@sanity/ui'
 import styled, {css} from 'styled-components'
 import {hues} from '@sanity/color'
+import {InfoOutlineIcon} from '@sanity/icons'
+import {isKeySegment, Marker, Path} from '@sanity/types'
+import {PortableTextBlock} from '@sanity/portable-text-editor'
+import {RenderCustomMarkers} from '../../types'
+import Markers from '../../legacyParts/Markers'
 import {
   BlockQuote,
   Heading1,
@@ -14,13 +19,15 @@ import {
 } from './textStyles'
 
 export interface TextBlockProps {
+  block: PortableTextBlock
   blockRef?: React.RefObject<HTMLDivElement>
   children: React.ReactNode
-  hasError?: boolean
-  hasMarker?: boolean
   level?: number
+  markers: Marker[]
+  onFocus: (path: Path) => void
   listItem?: 'bullet' | 'number'
   style?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal' | 'blockquote'
+  renderCustomMarkers?: RenderCustomMarkers
 }
 interface TextBlockStyleProps {
   $level?: number
@@ -170,7 +177,31 @@ function textBlockStyle(props: TextBlockStyleProps & {theme: Theme}) {
 const Root = styled(Box)<TextBlockStyleProps>(textBlockStyle)
 
 export function TextBlock(props: TextBlockProps): React.ReactElement {
-  const {children, level, listItem, style, blockRef, hasError, hasMarker} = props
+  const {
+    block,
+    blockRef,
+    children,
+    level,
+    listItem,
+    markers,
+    onFocus,
+    renderCustomMarkers,
+    style,
+  } = props
+
+  const errorMarkers = useMemo(
+    () =>
+      markers.filter(
+        (marker) =>
+          isKeySegment(marker.path[0]) &&
+          marker.path[0]._key === block._key &&
+          marker.type === 'validation' &&
+          marker.level === 'error'
+      ),
+    [block._key, markers]
+  )
+  const hasMarkers = markers.length > 0
+  const hasErrors = errorMarkers.length > 0
 
   const {$size, $style} = useMemo((): {$size: number; $style: 'text' | 'heading'} => {
     if (HEADER_SIZES_KEYS.includes(style)) {
@@ -232,22 +263,37 @@ export function TextBlock(props: TextBlockProps): React.ReactElement {
     }
   }, [listItem, style])
 
+  const markersToolTip = markers.filter((m) => m.path.length === 1).length > 0 && (
+    <Tooltip
+      placement="top"
+      boundaryElement={blockRef.current}
+      portal
+      content={
+        <Stack space={3} padding={2} style={{maxWidth: 250}}>
+          <Markers markers={markers} onFocus={onFocus} renderCustomMarkers={renderCustomMarkers} />
+        </Stack>
+      }
+    >
+      {text}
+    </Tooltip>
+  )
+
   return (
     <Root
       $level={level}
       $listItem={listItem}
       $size={$size}
       $style={$style}
+      data-invalid={hasErrors ? '' : undefined}
       data-level={level}
       data-list-item={listItem}
+      data-markers={hasMarkers ? '' : undefined}
       data-style={$style}
       data-ui="TextBlock"
-      data-invalid={hasError ? '' : undefined}
-      data-markers={hasMarker ? '' : undefined}
       ref={blockRef}
       {...paddingProps}
     >
-      <div>{text}</div>
+      {markersToolTip || text}
     </Root>
   )
 }

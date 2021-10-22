@@ -1,3 +1,17 @@
+function extractTextFromBlocks(blocks) {
+  if (!blocks) {
+    return ''
+  }
+  return blocks
+    .map((block) => {
+      return block.children
+        .filter((child) => child._type === 'span')
+        .map((span) => span.text)
+        .join('')
+    })
+    .join('')
+}
+
 export default {
   name: 'simpleBlock',
   title: 'Simple block',
@@ -43,6 +57,14 @@ export default {
           fields: [{type: 'string', name: 'mystring', validation: (Rule) => Rule.required()}],
         },
       ],
+      validation: (Rule) =>
+        Rule.custom((blocks) => {
+          console.log(blocks)
+          const text = extractTextFromBlocks(blocks)
+          console.log('HEY', text)
+          const length = text.length
+          return length < 10 ? 'Please write a longer paragraph.' : false
+        }).error(),
     },
     {
       name: 'notes',

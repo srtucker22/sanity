@@ -2,19 +2,24 @@
 import React, {FunctionComponent, useCallback, useMemo} from 'react'
 import {isEqual} from 'lodash'
 import {PortableTextChild, Type, RenderAttributes} from '@sanity/portable-text-editor'
-import {Path} from '@sanity/types'
+import {Marker, Path} from '@sanity/types'
 import {FOCUS_TERMINATOR} from '@sanity/util/paths'
 import styled, {css} from 'styled-components'
-import {Card, Theme} from '@sanity/ui'
+import {Card, Stack, Theme, Tooltip} from '@sanity/ui'
 import Preview from '../../../Preview'
+import Markers from '../legacyParts/Markers'
+import {RenderCustomMarkers} from '../types'
 
 type Props = {
-  value: PortableTextChild
-  type: Type
   attributes: RenderAttributes
-  readOnly: boolean
+  childRef?: React.RefObject<HTMLDivElement | HTMLSpanElement>
   hasError: boolean
+  markers: Marker[]
   onFocus: (path: Path) => void
+  readOnly: boolean
+  renderCustomMarkers: RenderCustomMarkers
+  type: Type
+  value: PortableTextChild
 }
 
 interface RootCardProps {
@@ -63,9 +68,12 @@ const Root = styled(Card)<RootCardProps>(rootStyle)
 
 export const InlineObject: FunctionComponent<Props> = ({
   attributes: {focused, selected, path},
+  childRef,
   hasError,
+  markers,
   onFocus,
   readOnly,
+  renderCustomMarkers,
   type,
   value,
 }) => {
@@ -89,6 +97,38 @@ export const InlineObject: FunctionComponent<Props> = ({
     return undefined
   }, [focused, hasError, selected])
 
+  const preview = useMemo(
+    () => (
+      <>
+        <Preview type={type} value={value} layout="inline" />
+        {isEmpty && !readOnly && <span>Click to edit</span>}
+      </>
+    ),
+    [isEmpty, readOnly, type, value]
+  )
+  const markersToolTip = useMemo(
+    () =>
+      markers.length > 0 && (
+        <Tooltip
+          placement="top"
+          boundaryElement={childRef.current}
+          portal
+          content={
+            <Stack space={3} padding={2} style={{maxWidth: 250}}>
+              <Markers
+                markers={markers}
+                onFocus={onFocus}
+                renderCustomMarkers={renderCustomMarkers}
+              />
+            </Stack>
+          }
+        >
+          {preview}
+        </Tooltip>
+      ),
+    [childRef, markers, onFocus, preview, renderCustomMarkers]
+  )
+
   return useMemo(
     () => (
       <Root
@@ -99,10 +139,9 @@ export const InlineObject: FunctionComponent<Props> = ({
         onClick={handleOpen}
         $readOnly={readOnly}
       >
-        <Preview type={type} value={value} layout="inline" />
-        {isEmpty && !readOnly && <span>Click to edit</span>}
+        {markersToolTip || preview}
       </Root>
     ),
-    [focused, handleOpen, hasError, isEmpty, readOnly, selected, tone, type, value]
+    [focused, handleOpen, hasError, markersToolTip, preview, readOnly, selected, tone]
   )
 }

@@ -1,4 +1,4 @@
-import {Card, Container, Flex, LayerProvider} from '@sanity/ui'
+import {Box, Card, Container, Flex, LayerProvider, Text} from '@sanity/ui'
 import React from 'react'
 import {useBoolean, useSelect} from '@sanity/ui-workshop'
 import {CommentIcon, AddIcon} from '@sanity/icons'
@@ -11,9 +11,9 @@ function renderCustomMarkers(markers) {
   return markers.map((marker, index) => {
     if (marker.type === 'customMarkerTest') {
       return (
-        <div key={`marker-${index}`}>
-          <CommentIcon />
-        </div>
+        <Box key={`marker-${index}`}>
+          <CommentIcon /> <Text>Two comments</Text>
+        </Box>
       )
     }
     return null
