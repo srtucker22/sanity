@@ -66,7 +66,7 @@ const Root = styled(Card)((props: {theme: Theme}) => {
     &[data-markers] {
       &:after {
         ${overlay}
-        background-color: ${hues.purple[50].hex};
+        background-color: ${color.dark ? hues.purple[950].hex : hues.purple[50].hex};
       }
     }
 

@@ -120,7 +120,7 @@ function textBlockStyle(props: TextBlockStyleProps & {theme: Theme}) {
 
     &[data-markers] > div:before {
       ${overlay}
-      background-color: ${hues.purple[50].hex};
+      background-color: ${color.dark ? hues.purple[950].hex : hues.purple[50].hex};
     }
 
     &[data-invalid] {
