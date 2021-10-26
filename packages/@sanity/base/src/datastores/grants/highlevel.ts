@@ -13,7 +13,7 @@ import {checkDeletePermission, checkPublishPermission, checkUnpublishPermission}
 import grantsStore from './'
 
 function getSchemaType(typeName: string): SchemaType {
-  const type = require('part:@sanity/base/schema').get(typeName)
+  const type = require('part:@sanity/base/schema').default.get(typeName)
   if (!type) {
     throw new Error(`No such schema type: ${typeName}`)
   }
