@@ -8,11 +8,23 @@ import {
   usePortableTextEditor,
 } from '@sanity/portable-text-editor'
 import {Path, Marker, SchemaType} from '@sanity/types'
-import {Box, Button, Flex, Popover, PopoverProps, Text, useClickOutside, useLayer} from '@sanity/ui'
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Popover,
+  PopoverProps,
+  Text,
+  useClickOutside,
+  useLayer,
+} from '@sanity/ui'
 import React, {useCallback, useEffect, useState} from 'react'
 import styled from 'styled-components'
 import {FormBuilderInput} from '../../../../FormBuilderInput'
 import {PatchEvent} from '../../../../PatchEvent'
+import {DIALOG_WIDTH_TO_UI_WIDTH} from './constants'
+import {DialogWidth} from './types'
 
 interface PopoverObjectEditingProps {
   // eslint-disable-next-line react/no-unused-prop-types
@@ -28,6 +40,7 @@ interface PopoverObjectEditingProps {
   presence: FormFieldPresence[]
   readOnly: boolean
   type: Type
+  width?: DialogWidth
 }
 
 const Root = styled(Popover)`
@@ -40,10 +53,10 @@ const Root = styled(Popover)`
   }
 `
 
-const ContentRoot = styled(Flex)`
+const ContentRoot = styled(Container)`
   overflow: hidden;
   width: calc(100vw - 16px);
-  max-width: 320px;
+  /* max-width: 320px; */
 `
 
 const Header = styled(Box)`
@@ -100,6 +113,7 @@ function Content(props: PopoverObjectEditingProps & {rootElement: HTMLDivElement
     readOnly,
     rootElement,
     type,
+    width = 0,
   } = props
 
   const handleChange = useCallback((patchEvent: PatchEvent): void => onChange(patchEvent, path), [
@@ -130,35 +144,37 @@ function Content(props: PopoverObjectEditingProps & {rootElement: HTMLDivElement
   }, [handleKeyDown])
 
   return (
-    <ContentRoot direction="column">
-      <Header padding={1}>
-        <Flex align="center">
-          <Box flex={1} padding={2}>
-            <Text weight="semibold">{type.title}</Text>
-          </Box>
+    <ContentRoot width={DIALOG_WIDTH_TO_UI_WIDTH[width]}>
+      <Flex direction="column">
+        <Header padding={1}>
+          <Flex align="center">
+            <Box flex={1} padding={2}>
+              <Text weight="semibold">{type.title}</Text>
+            </Box>
 
-          <Button icon={CloseIcon} mode="bleed" onClick={handleClose} padding={2} />
-        </Flex>
-      </Header>
-      <Box flex={1} overflow="auto">
-        <PresenceOverlay margins={[0, 0, 1, 0]}>
-          <Box padding={3}>
-            <FormBuilderInput
-              focusPath={focusPath}
-              level={0}
-              markers={markers}
-              onBlur={onBlur}
-              onChange={handleChange}
-              onFocus={onFocus}
-              path={path}
-              presence={presence}
-              readOnly={readOnly || type.readOnly}
-              type={type as SchemaType}
-              value={object}
-            />
-          </Box>
-        </PresenceOverlay>
-      </Box>
+            <Button icon={CloseIcon} mode="bleed" onClick={handleClose} padding={2} />
+          </Flex>
+        </Header>
+        <Box flex={1} overflow="auto">
+          <PresenceOverlay margins={[0, 0, 1, 0]}>
+            <Box padding={3}>
+              <FormBuilderInput
+                focusPath={focusPath}
+                level={0}
+                markers={markers}
+                onBlur={onBlur}
+                onChange={handleChange}
+                onFocus={onFocus}
+                path={path}
+                presence={presence}
+                readOnly={readOnly || type.readOnly}
+                type={type as SchemaType}
+                value={object}
+              />
+            </Box>
+          </PresenceOverlay>
+        </Box>
+      </Flex>
     </ContentRoot>
   )
 }

@@ -18,11 +18,25 @@ const linkType = {
   ],
 }
 
+const someAnnotationType = {
+  type: 'object',
+  name: 'someAnnotation',
+  options: {
+    modal: {
+      size: 'medium',
+    },
+  },
+  fields: [{type: 'string', name: 'title'}],
+}
+
 const someObject = {
   type: 'object',
   name: 'someObject',
   options: {
-    editModal: 'fullscreen',
+    modal: {
+      type: 'dialog',
+      size: 'full',
+    },
   },
   fields: [{type: 'string', name: 'title'}],
 }
@@ -56,7 +70,7 @@ export const blockType = {
     {title: 'Quote', value: 'blockquote'},
   ],
   marks: {
-    annotations: [someObject, linkType],
+    annotations: [someAnnotationType, linkType],
   },
   of: [someObject, imageType],
   validation: (Rule) =>

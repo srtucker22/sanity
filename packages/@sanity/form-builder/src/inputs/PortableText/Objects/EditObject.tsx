@@ -20,6 +20,7 @@ import {Patch} from '../../../patch/types'
 import {DefaultObjectEditing} from './renderers/DefaultObjectEditing'
 import {PopoverObjectEditing} from './renderers/PopoverObjectEditing'
 import {FullscreenObjectEditing} from './renderers/FullscreenObjectEditing'
+import {DialogWidth} from './renderers/types'
 
 const PATCHES: WeakMap<PortableTextEditor, Patch[]> = new WeakMap()
 const IS_THROTTLING: WeakMap<PortableTextEditor, boolean> = new WeakMap()
@@ -63,6 +64,7 @@ export const EditObject = ({
   const formBuilderPath = objectEditData && objectEditData.formBuilderPath
   const kind = objectEditData && objectEditData.kind
   const editModalLayout: ModalType = get(type, 'options.editModal')
+  const dialogWidth: DialogWidth = get(type, 'options.dialogWidth')
 
   // Initialize weakmaps on mount, and send patches on unmount
   useEffect(() => {
@@ -160,6 +162,7 @@ export const EditObject = ({
         presence={presence}
         readOnly={readOnly}
         type={type}
+        width={dialogWidth}
       />
     )
   }
@@ -176,6 +179,7 @@ export const EditObject = ({
       presence={presence}
       readOnly={readOnly}
       type={type}
+      width={dialogWidth}
     />
   )
 }

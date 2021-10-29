@@ -5,6 +5,8 @@ import {PortableTextBlock, Type, PortableTextChild} from '@sanity/portable-text-
 import {Box, Dialog, useLayer} from '@sanity/ui'
 import {FormBuilderInput} from '../../../../FormBuilderInput'
 import {PatchEvent} from '../../../../PatchEvent'
+import {DIALOG_WIDTH_TO_UI_WIDTH} from './constants'
+import {DialogWidth} from './types'
 
 interface DefaultObjectEditingProps {
   focusPath: Path
@@ -18,6 +20,7 @@ interface DefaultObjectEditingProps {
   presence: FormFieldPresence[]
   readOnly: boolean
   type: Type
+  width?: DialogWidth
 }
 
 export function DefaultObjectEditing(props: DefaultObjectEditingProps) {
@@ -33,6 +36,7 @@ export function DefaultObjectEditing(props: DefaultObjectEditingProps) {
     presence,
     readOnly,
     type,
+    width = 'medium',
   } = props
 
   const handleChange = useCallback((patchEvent: PatchEvent): void => onChange(patchEvent, path), [
@@ -70,7 +74,7 @@ export function DefaultObjectEditing(props: DefaultObjectEditingProps) {
       header={type.title}
       portal="default"
       ref={setRootElement}
-      width={1}
+      width={DIALOG_WIDTH_TO_UI_WIDTH[width]}
     >
       <PresenceOverlay margins={[0, 0, 1, 0]}>
         <Box padding={4}>
