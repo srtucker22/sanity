@@ -46,7 +46,7 @@ export default function TestStory() {
   const onChange = noop
   const attributes = {focused: false, selected: false, path: []}
   const readOnly = false
-  const value = []
+  // const value = []
   return (
     <Flex align="center" height="fill" justify="center" padding={4} sizing="border">
       <Container width={1}>
