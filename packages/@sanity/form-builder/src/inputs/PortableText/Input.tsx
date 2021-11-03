@@ -85,7 +85,6 @@ export default function PortableTextInput(props: Props) {
     (data: ObjectEditData) => void
   ] = useState(null)
   const [initialSelection, setInitialSelection] = useState(undefined)
-  const [returnToSelection, setReturnToSelection] = useState<EditorSelection>(null) // The selection to return to after closing the edit object interface
   const [scrollElement, setScrollElement] = useState<HTMLElement | null>(null)
 
   // Respond to focusPath changes
@@ -116,7 +115,7 @@ export default function PortableTextInput(props: Props) {
           const point = {path: focusPath, offset: 0}
           PortableTextEditor.select(editor, {focus: point, anchor: point})
         }
-      } else if (isAnnotation && !returnToSelection) {
+      } else if (isAnnotation) {
         const block = (PortableTextEditor.getValue(editor) || []).find(
           (blk) => blk._key === blockSegment._key
         )
@@ -131,9 +130,9 @@ export default function PortableTextInput(props: Props) {
             setObjectEditData({
               editorPath: spanPath,
               formBuilderPath: focusPath.slice(0, 3),
+              returnToSelection: selection,
               kind: 'annotation',
             })
-            setReturnToSelection(selection)
           }
         }
         return
@@ -155,12 +154,16 @@ export default function PortableTextInput(props: Props) {
             anchor: {path, offset: 0},
           })
           // Make it go to selection first, then load  the editing interface
-          setObjectEditData({editorPath: path, formBuilderPath: path, kind})
-          setReturnToSelection(selection)
+          setObjectEditData({
+            editorPath: path,
+            formBuilderPath: path,
+            kind,
+            returnToSelection: selection,
+          })
         }
       }
     }
-  }, [editor, focusPath, hasFocus, objectEditData, selection, returnToSelection])
+  }, [editor, focusPath, hasFocus, objectEditData, selection])
 
   // Set as active whenever we have focus inside the editor.
   useEffect(() => {
@@ -203,11 +206,11 @@ export default function PortableTextInput(props: Props) {
 
   const handleEditObjectFormBuilderFocus = useCallback(
     (nextPath: Path): void => {
-      if (objectEditData && nextPath && !returnToSelection) {
+      if (objectEditData && nextPath) {
         onFocus(nextPath)
       }
     },
-    [objectEditData, returnToSelection, onFocus]
+    [objectEditData, onFocus]
   )
 
   const handleEditObjectFormBuilderBlur = useCallback(() => {
@@ -332,14 +335,11 @@ export default function PortableTextInput(props: Props) {
   )
 
   const handleEditObjectClose = useCallback(() => {
+    const sel = objectEditData?.returnToSelection || selection
     setObjectEditData(null)
-    if (returnToSelection) {
-      PortableTextEditor.select(editor, returnToSelection)
-    } else {
-      focus()
-    }
-    setReturnToSelection(null)
-  }, [editor, focus, returnToSelection])
+    onFocus(sel.focus.path)
+    PortableTextEditor.select(editor, sel)
+  }, [editor, objectEditData?.returnToSelection, onFocus, selection])
 
   const [portalElement, setPortalElement] = useState<HTMLDivElement | null>(null)
 

@@ -134,7 +134,7 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
           ) {
             setTimeout(() => {
               onFocus(change.selection.focus.path)
-            }, 0)
+            }, 0) // Do this in the next tick or we might end up tracking it
           }
           break
         case 'focus':
