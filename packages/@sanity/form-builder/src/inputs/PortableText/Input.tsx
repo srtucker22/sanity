@@ -337,8 +337,12 @@ export default function PortableTextInput(props: Props) {
   const handleEditObjectClose = useCallback(() => {
     const sel = objectEditData?.returnToSelection || selection
     setObjectEditData(null)
-    onFocus(sel.focus.path)
-    PortableTextEditor.select(editor, sel)
+    if (sel) {
+      onFocus(sel.focus.path)
+      PortableTextEditor.select(editor, sel)
+    } else {
+      PortableTextEditor.focus(editor)
+    }
   }, [editor, objectEditData?.returnToSelection, onFocus, selection])
 
   const [portalElement, setPortalElement] = useState<HTMLDivElement | null>(null)
