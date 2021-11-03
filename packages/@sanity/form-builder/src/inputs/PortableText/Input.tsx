@@ -40,7 +40,6 @@ type Props = {
   hotkeys: HotkeyOptions
   isFullscreen: boolean
   markers: Marker[]
-  onBlur: () => void
   onChange: (event: PatchEvent) => void
   onCopy?: OnCopyFn
   onFocus: (path: Path) => void
@@ -62,7 +61,6 @@ export default function PortableTextInput(props: Props) {
     hotkeys,
     isFullscreen,
     markers,
-    onBlur,
     onChange,
     onCopy,
     onFocus,
@@ -100,7 +98,10 @@ export default function PortableTextInput(props: Props) {
       // Test if this focus path is the same as we got selected already.
       // If it is, just return or the editor will just try to refocus which
       // interferes with tab-navigation etc.
-      const sameSelection = selection && isEqual(selection.focus.path, focusPath)
+      const sameSelection =
+        selection &&
+        isEqual(selection.focus.path, focusPath) &&
+        isEqual(selection.focus.path, selection.anchor.path)
       if (sameSelection) {
         return
       }
@@ -167,22 +168,6 @@ export default function PortableTextInput(props: Props) {
       setIsActive(true)
     }
   }, [hasFocus])
-
-  // Update the FormBuilder focusPath as we get a new selection from the editor
-  // This will also set presence on that path
-  useEffect(() => {
-    // If no focusPath return
-    if (typeof focusPath === 'undefined') {
-      return
-    }
-    if (
-      selection &&
-      isEqual(selection.focus.path, selection.anchor.path) && // Important, or (backwards) selections will bork!
-      !isEqual(focusPath, selection.focus.path) // Only if different than before
-    ) {
-      onFocus(selection.focus.path)
-    }
-  }, [focusPath, objectEditData, onFocus, selection, returnToSelection])
 
   const handleToggleFullscreen = useCallback(() => {
     setInitialSelection(PortableTextEditor.getSelection(editor))
@@ -366,7 +351,6 @@ export default function PortableTextInput(props: Props) {
         isFullscreen={isFullscreen}
         key={`editor-${editorId}`}
         markers={markers}
-        onBlur={onBlur}
         onFocus={onFocus}
         onFormBuilderChange={onChange}
         onCopy={onCopy}
@@ -390,7 +374,6 @@ export default function PortableTextInput(props: Props) {
       isFullscreen,
       editorId,
       markers,
-      onBlur,
       onFocus,
       onChange,
       onCopy,
