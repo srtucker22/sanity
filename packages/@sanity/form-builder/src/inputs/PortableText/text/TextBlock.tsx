@@ -5,10 +5,10 @@ import {hues} from '@sanity/color'
 import {isKeySegment, Marker} from '@sanity/types'
 import {PortableTextBlock, RenderAttributes} from '@sanity/portable-text-editor'
 import {ChangeIndicatorWithProvidedFullPath} from '@sanity/base/change-indicators'
-import {RenderBlockActions, RenderCustomMarkers} from '../../types'
-import Markers from '../../legacyParts/Markers'
-import PatchEvent from '../../../../PatchEvent'
-import {BlockActions} from '../../BlockActions'
+import {RenderBlockActions, RenderCustomMarkers} from '../types'
+import Markers from '../legacyParts/Markers'
+import PatchEvent from '../../../PatchEvent'
+import {BlockActions} from '../BlockActions'
 import {
   BlockQuote,
   Heading1,
@@ -18,7 +18,7 @@ import {
   Heading5,
   Heading6,
   Normal,
-} from '../textStyles'
+} from './textStyles'
 
 export interface TextBlockProps {
   attributes: RenderAttributes
