@@ -18,7 +18,7 @@ import {
   Heading5,
   Heading6,
   Normal,
-} from './textStyles'
+} from '../textStyles'
 
 export interface TextBlockProps {
   attributes: RenderAttributes
