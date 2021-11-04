@@ -160,7 +160,7 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
         default:
       }
     },
-    [onBlur, onChange, toast]
+    [focusPath, onBlur, onChange, onFocus, toast]
   )
 
   const focusSkipperButton = useMemo(() => {
