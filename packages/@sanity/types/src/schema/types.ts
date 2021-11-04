@@ -207,6 +207,7 @@ export interface ObjectSchemaTypeWithOptions extends ObjectSchemaType {
 export interface SingleFieldSet {
   single: true
   field: ObjectField
+  hidden?: HiddenOption
 }
 
 export interface MultiFieldSet {
