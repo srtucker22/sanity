@@ -186,6 +186,7 @@ export const ObjectInput = memo(
             level={level + 1}
             presence={presence}
             markers={markers}
+            fieldValues={value}
           >
             {() =>
               // lazy render children
