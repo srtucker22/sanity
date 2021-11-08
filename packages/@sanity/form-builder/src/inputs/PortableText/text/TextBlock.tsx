@@ -381,7 +381,13 @@ export function TextBlock(props: TextBlockProps): React.ReactElement {
             <Box data-testid="text-block__inner">{markersToolTip || text}</Box>
           </TextRoot>
         </Box>
-        <div contentEditable={false}>
+        <div
+          contentEditable={false}
+          // NOTE: it’s important that this element does not have the `user-select: none` CSS
+          // property, because that will not work in Safari (breaks `Cmd+A`).
+          // It seems Safari does not allow defining `user-select` on an element which also has
+          // the `contenteditable="false"` attribute.
+        >
           {renderBlockActions && (
             <BlockActionsOuter marginRight={1}>
               <BlockActionsInner>
