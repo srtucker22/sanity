@@ -1,8 +1,8 @@
 import React, {forwardRef, useMemo, useRef} from 'react'
 import {
-  HiddenOption,
-  HiddenOptionCallbackContext,
-  HiddenOptionCallback,
+  ConditionalProperty,
+  ConditionalPropertyCallbackContext,
+  ConditionalPropertyCallback,
   SanityDocument,
   CurrentUser,
 } from '@sanity/types'
@@ -20,8 +20,8 @@ function omitDeprecatedRole(user: CurrentUser): Omit<CurrentUser, 'role'> {
 }
 
 function useCheckCondition(
-  hidden: HiddenOptionCallback,
-  {document, parent, value, currentUser}: HiddenOptionCallbackContext
+  hidden: ConditionalPropertyCallback,
+  {document, parent, value, currentUser}: ConditionalPropertyCallbackContext
 ) {
   const didWarn = useRef(false)
   return useMemo(() => {
@@ -48,7 +48,7 @@ function useCheckCondition(
 }
 
 interface Props {
-  hidden: HiddenOption
+  hidden: ConditionalProperty
   parent: Record<string, unknown> | undefined
   value: unknown
   children?: React.ReactNode
@@ -64,7 +64,7 @@ export const ConditionalField = ({hidden, ...rest}: Props) => {
 
 const ConditionalFieldWithDocument = withDocument(
   forwardRef(function ConditionalFieldWithDocument(
-    props: Omit<Props, 'hidden'> & {document: SanityDocument; hidden: HiddenOptionCallback},
+    props: Omit<Props, 'hidden'> & {document: SanityDocument; hidden: ConditionalPropertyCallback},
     ref /* ignore ref as there's no place to put it */
   ) {
     const {document, parent, value, hidden, children} = props
