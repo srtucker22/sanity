@@ -15,6 +15,7 @@ import {Grid} from '@sanity/ui'
 import PatchEvent, {set, setIfMissing, unset} from '../../PatchEvent'
 import {applyAll} from '../../patch/applyPatch'
 import {EMPTY_ARRAY} from '../../utils/empty'
+import {ConditionalReadOnlyField} from '../common/ConditionalReadOnlyField'
 import {ObjectInputField} from './ObjectInputField'
 import {UnknownFields} from './UnknownFields'
 import {ObjectFieldSet} from './ObjectFieldSet'
@@ -133,23 +134,25 @@ export const ObjectInput = memo(
         }
 
         return (
-          <ObjectInputField
-            parent={value}
-            key={`field-${field.name}`}
-            field={field}
-            value={fieldValue}
-            onChange={handleFieldChange}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            compareValue={compareValue}
-            markers={markers}
-            focusPath={focusPath}
-            level={fieldLevel}
-            presence={presence}
-            readOnly={readOnly || isFieldsetReadOnly}
-            filterField={filterField}
-            ref={index === 0 ? forwardedRef : null}
-          />
+          <ConditionalReadOnlyField value={value} readOnly={readOnly || isFieldsetReadOnly}>
+            <ObjectInputField
+              parent={value}
+              key={`field-${field.name}`}
+              field={field}
+              value={fieldValue}
+              onChange={handleFieldChange}
+              onFocus={onFocus}
+              onBlur={onBlur}
+              compareValue={compareValue}
+              markers={markers}
+              focusPath={focusPath}
+              level={fieldLevel}
+              presence={presence}
+              readOnly={readOnly || isFieldsetReadOnly}
+              filterField={filterField}
+              ref={index === 0 ? forwardedRef : null}
+            />
+          </ConditionalReadOnlyField>
         )
       },
       [

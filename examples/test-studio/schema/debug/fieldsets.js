@@ -21,6 +21,7 @@ export default {
       name: 'single',
       title: 'Single',
       hidden: false,
+      readOnly: ({value, currentUser}) => value.single === 'single',
     },
   ],
   fields: [
