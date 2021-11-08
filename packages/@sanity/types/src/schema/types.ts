@@ -208,7 +208,7 @@ export interface SingleFieldSet {
   single: true
   field: ObjectField
   hidden?: ConditionalProperty
-  readOnly?: ConditionalProperty
+  readOnly?: boolean
 }
 
 export interface MultiFieldSet {
@@ -221,6 +221,7 @@ export interface MultiFieldSet {
   }
   fields: ObjectField[]
   hidden?: ConditionalProperty
+  readOnly?: boolean
 }
 
 export type Fieldset = SingleFieldSet | MultiFieldSet
