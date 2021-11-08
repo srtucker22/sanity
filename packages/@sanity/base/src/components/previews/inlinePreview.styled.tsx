@@ -6,11 +6,6 @@ export const RootSpan = styled.span`
   align-items: center;
   vertical-align: top;
   max-width: 100%;
-  /* outline: 1px solid red; */
-  /* margin-top: calc(0.125em); */
-  /* margin-bottom: -1px; */
-  /* margin: -1px 0; */
-  /* padding: 1px 0; */
 `
 
 export const MediaSpan = styled.span`
