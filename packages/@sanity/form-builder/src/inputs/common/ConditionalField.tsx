@@ -49,7 +49,7 @@ function useCheckCondition(
 
 interface Props {
   hidden: ConditionalProperty
-  parent: Record<string, unknown> | undefined
+  parent?: Record<string, unknown> | undefined
   value: unknown
   children?: React.ReactNode
 }
