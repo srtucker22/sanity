@@ -129,7 +129,7 @@ export const EditableWrapper = styled(Card)<{$isFullscreen: boolean}>`
   & > div {
     height: 100%;
 
-    [data-slate-editor='true'] {
+    .pt-editable {
       display: flex;
       flex-direction: column;
       flex: 1;
