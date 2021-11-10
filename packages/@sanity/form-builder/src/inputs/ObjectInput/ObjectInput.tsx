@@ -7,6 +7,7 @@ import {
   Path,
   SingleFieldSet,
   Fieldset,
+  ConditionalProperty,
 } from '@sanity/types'
 import {FormFieldPresence} from '@sanity/base/presence'
 import {FormFieldSet} from '@sanity/base/components'
@@ -127,7 +128,12 @@ export const ObjectInput = memo(
     )
 
     const renderField = React.useCallback(
-      (field: ObjectField, fieldLevel: number, index: number, isFieldsetReadOnly?: boolean) => {
+      (
+        field: ObjectField,
+        fieldLevel: number,
+        index: number,
+        isFieldsetReadOnly?: ConditionalProperty
+      ) => {
         const fieldValue = value?.[field.name]
         if (!filterField(type, field)) {
           return null
@@ -148,7 +154,6 @@ export const ObjectInput = memo(
               focusPath={focusPath}
               level={fieldLevel}
               presence={presence}
-              readOnly={readOnly || isFieldsetReadOnly}
               filterField={filterField}
               ref={index === 0 ? forwardedRef : null}
             />
