@@ -16,12 +16,13 @@ export default {
       title: 'Settings',
       options: {columns: 2},
       hidden: false,
+      readOnly: true,
     },
     {
       name: 'single',
       title: 'Single',
       hidden: false,
-      readOnly: ({value, currentUser}) => value.single === 'single',
+      readOnly: true,
     },
   ],
   fields: [
@@ -30,6 +31,12 @@ export default {
       type: 'myObject',
       title: 'MyObject',
       description: 'The first field here should be the title used in previews',
+    },
+    {
+      name: 'single2',
+      type: 'string',
+      title: 'Single2',
+      readOnly: true,
     },
     {
       name: 'single',

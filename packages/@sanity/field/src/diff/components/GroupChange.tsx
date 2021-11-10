@@ -79,7 +79,7 @@ export function GroupChange({
           <ChangeResolver
             key={change.key}
             change={change}
-            readOnly={readOnly || group?.schemaType?.readOnly}
+            readOnly={readOnly || group?.schemaType?.readOnly || group.readOnly}
           />
         ))}
       </Stack>
@@ -109,7 +109,7 @@ export function GroupChange({
               onClick={handleRevertChangesConfirm}
               ref={setRevertButtonRef}
               selected={confirmRevertOpen}
-              disabled={group?.schemaType?.readOnly || readOnly}
+              disabled={group?.schemaType?.readOnly || group.readOnly || readOnly}
             />
           </Box>
         </PopoverWrapper>
