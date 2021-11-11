@@ -44,6 +44,7 @@ export default {
       hidden: ({document}) => {
         return Boolean(document.hidden)
       },
+      hidden: () => false,
       fields: [
         {
           name: 'readOnly',
@@ -93,7 +94,7 @@ export default {
           name: 'field3',
           type: 'string',
           description: 'This will be hidden if its value becomes "hideme"',
-          hidden: ({value}) => value === 'hideme',
+          hidden: ({value}) => value === 'hid',
         },
       ],
     },
