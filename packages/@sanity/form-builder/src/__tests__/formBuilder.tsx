@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/extend-expect'
 import React from 'react'
 import {render} from '@testing-library/react'
 import Schema from '@sanity/schema'
-import {FormBuilderTester, DEFAULT_PROPS} from '../../../utils/tests/FormBuilderTester'
+import {DEFAULT_PROPS, FormBuilderTester} from '../utils/tests/FormBuilderTester'
 
 const callbackFn = jest.fn(() => false)
 const callbackFnDocument = jest.fn(({document}) =>
