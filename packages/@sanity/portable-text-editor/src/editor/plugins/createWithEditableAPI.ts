@@ -1,14 +1,4 @@
-import {
-  Text,
-  Range,
-  Transforms,
-  Editor,
-  Path as SlatePath,
-  Element as SlateElement,
-  Operation,
-  Node,
-} from 'slate'
-import {isEqual} from 'lodash'
+import {Text, Range, Transforms, Editor, Element as SlateElement, Operation, Node} from 'slate'
 import {Path} from '@sanity/types'
 import {ReactEditor} from '@sanity/slate-react'
 import {DOMNode} from '@sanity/slate-react/dist/utils/dom'
@@ -29,7 +19,7 @@ export function createWithEditableAPI(
   portableTextFeatures: PortableTextFeatures,
   keyGenerator: () => string
 ) {
-  return function withEditableAPI(editor: PortableTextSlateEditor & ReactEditor) {
+  return function withEditableAPI(editor: PortableTextSlateEditor): PortableTextSlateEditor {
     const {apply} = editor
 
     // Convert the selection when the operation happens,
@@ -123,7 +113,7 @@ export function createWithEditableAPI(
               Editor.nodes(editor, {
                 mode: 'lowest',
                 at: editor.selection.focus,
-                match: (n) => n._type !== undefined,
+                match: (n) => SlateElement.isElement(n) && n._type !== undefined,
                 voids: true,
               })
             )[0] || [undefined]
@@ -132,7 +122,7 @@ export function createWithEditableAPI(
                 _key: 'pseudo',
                 _type: portableTextFeatures.types.block.name,
                 children: [node],
-              }
+              } as PortableTextBlock
               return fromSlateValue(
                 [pseudoBlock],
                 portableTextFeatures.types.block.name,
@@ -178,7 +168,7 @@ export function createWithEditableAPI(
           portableTextFeatures.types.block.name
         )[0] as unknown) as SlateElement
         const child = block.children[0]
-        Editor.insertNode(editor, child)
+        Editor.insertNode(editor, child as Node)
         editor.onChange()
         return toPortableTextRange(editor)?.focus.path || []
       },
@@ -233,7 +223,12 @@ export function createWithEditableAPI(
         )
         if (slatePath) {
           const [block, blockPath] = Editor.node(editor, slatePath.focus.path.slice(0, 1))
-          if (block && blockPath && typeof block._key === 'string') {
+          if (
+            block &&
+            SlateElement.isElement(block) &&
+            blockPath &&
+            typeof block._key === 'string'
+          ) {
             if (path.length === 1 && slatePath.focus.path.length === 1) {
               return [
                 fromSlateValue([block], portableTextFeatures.types.block.name)[0],
@@ -257,7 +252,10 @@ export function createWithEditableAPI(
         let node: DOMNode | undefined
         try {
           const [item] = Array.from(
-            Editor.nodes(editor, {at: [], match: (n) => n._key === element._key}) || []
+            Editor.nodes(editor, {
+              at: [],
+              match: (n) => SlateElement.isElement(n) && n._key === element._key,
+            }) || []
           )[0] || [undefined]
           node = ReactEditor.toDOMNode(editor, item)
         } catch (err) {
@@ -281,9 +279,14 @@ export function createWithEditableAPI(
           })
           for (const [span, path] of spans) {
             const [block] = Editor.node(editor, path, {depth: 1})
-            if (block && Array.isArray(block.markDefs)) {
+            if (block && SlateElement.isElement(block) && Array.isArray(block.markDefs)) {
               block.markDefs.forEach((def) => {
-                if (span.marks && Array.isArray(span.marks) && span.marks.includes(def._key)) {
+                if (
+                  Text.isText(span) &&
+                  span.marks &&
+                  Array.isArray(span.marks) &&
+                  span.marks.includes(def._key)
+                ) {
                   activeAnnotations.push(def)
                 }
               })
@@ -296,21 +299,21 @@ export function createWithEditableAPI(
       },
       addAnnotation: (
         type: Type,
-        value?: {[prop: string]: any}
+        value?: {[prop: string]: PortableTextBlock}
       ): {spanPath: Path; markDefPath: Path} | undefined => {
         const {selection} = editor
         if (selection) {
-          const [blockElement] = Editor.node(editor, selection.focus, {depth: 1})
-          if (blockElement._type === portableTextFeatures.types.block.name) {
+          const [block] = Editor.node(editor, selection.focus, {depth: 1})
+          if (
+            SlateElement.isElement(block) &&
+            block._type === portableTextFeatures.types.block.name
+          ) {
             const annotationKey = keyGenerator()
-            if (Array.isArray(blockElement.markDefs)) {
+            if (Array.isArray(block.markDefs)) {
               Transforms.setNodes(
                 editor,
                 {
-                  markDefs: [
-                    ...blockElement.markDefs,
-                    {_type: type.name, _key: annotationKey, ...value},
-                  ],
+                  markDefs: [...block.markDefs, {_type: type.name, _key: annotationKey, ...value}],
                 },
                 {at: selection.focus}
               )
@@ -322,7 +325,7 @@ export function createWithEditableAPI(
                 Editor.withoutNormalizing(editor, () => {
                   // Split if needed
                   Transforms.setNodes(editor, {}, {match: Text.isText, split: true})
-                  if (editor.selection) {
+                  if (editor.selection && Text.isText(textNode)) {
                     Transforms.setNodes(
                       editor,
                       {
@@ -330,7 +333,8 @@ export function createWithEditableAPI(
                       },
                       {
                         at: editor.selection,
-                        match: (n) => n._type === portableTextFeatures.types.span.name,
+                        match: (n) =>
+                          Text.isText(n) && n._type === portableTextFeatures.types.span.name,
                       }
                     )
                   }
@@ -339,7 +343,7 @@ export function createWithEditableAPI(
                 editor.onChange()
                 const newSelection = toPortableTextRange(editor)
                 // eslint-disable-next-line max-depth
-                if (newSelection && typeof blockElement._key === 'string') {
+                if (newSelection && typeof block._key === 'string') {
                   // Insert an empty string to continue writing non-annotated text
                   Editor.withoutNormalizing(editor, () => {
                     if (editor.selection) {
@@ -355,7 +359,7 @@ export function createWithEditableAPI(
                   })
                   return {
                     spanPath: newSelection.focus.path,
-                    markDefPath: [{_key: blockElement._key}, 'markDefs', {_key: annotationKey}],
+                    markDefPath: [{_key: block._key}, 'markDefs', {_key: annotationKey}],
                   }
                 }
               }
@@ -384,7 +388,7 @@ export function createWithEditableAPI(
           // Select the whole annotation if collapsed
           if (Range.isCollapsed(selection)) {
             const [node, nodePath] = Editor.node(editor, selection, {depth: 2})
-            if (node && node.marks && typeof node.text === 'string') {
+            if (Text.isText(node) && node.marks && typeof node.text === 'string') {
               Transforms.select(editor, nodePath)
               selection = editor.selection
             }
@@ -411,11 +415,15 @@ export function createWithEditableAPI(
               ]
               spans.forEach(([span, path]) => {
                 const [block] = Editor.node(editor, path, {depth: 1})
-                if (block && Array.isArray(block.markDefs)) {
+                if (SlateElement.isElement(block) && Array.isArray(block.markDefs)) {
                   block.markDefs
                     .filter((def) => def._type === type.name)
                     .forEach((def) => {
-                      if (Array.isArray(span.marks) && span.marks.includes(def._key)) {
+                      if (
+                        Text.isText(span) &&
+                        Array.isArray(span.marks) &&
+                        span.marks.includes(def._key)
+                      ) {
                         const newMarks = [...(span.marks || []).filter((mark) => mark !== def._key)]
                         Transforms.setNodes(
                           editor,

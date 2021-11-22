@@ -488,7 +488,6 @@ export const PortableTextEditable = forwardRef(function PortableTextEditable(
       <Slate
         onChange={handleChange}
         editor={portableTextEditor.slateInstance}
-        selection={selection}
         value={getValueOrIntitialValue(stateValue, [placeHolderBlock])}
       >
         <SlateEditable

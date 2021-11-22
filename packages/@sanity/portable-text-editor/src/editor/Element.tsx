@@ -1,7 +1,7 @@
 import React, {ReactElement, FunctionComponent, useRef} from 'react'
 import {Element as SlateElement, Editor, Range} from 'slate'
 import {Path} from '@sanity/types'
-import {useSelected, useEditor, ReactEditor} from '@sanity/slate-react'
+import {useSelected, useSlateStatic, ReactEditor} from '@sanity/slate-react'
 import {PortableTextBlock, PortableTextFeatures} from '../types/portableText'
 import {RenderAttributes, RenderBlockFunction, RenderChildFunction} from '../types/editor'
 import {fromSlateValue} from '../utils/values'
@@ -43,7 +43,7 @@ export const Element: FunctionComponent<ElementProps> = ({
   renderBlock,
   renderChild,
 }) => {
-  const editor = useEditor()
+  const editor = useSlateStatic()
   const selected = useSelected()
   const blockRef = useRef<HTMLDivElement | null>(null)
   const inlineBlockObjectRef = useRef(null)
@@ -68,7 +68,7 @@ export const Element: FunctionComponent<ElementProps> = ({
     if (!type) {
       throw new Error('Could not find type for inline block element')
     }
-    if (block && typeof block._key === 'string') {
+    if (SlateElement.isElement(block)) {
       const elmPath: Path = [{_key: block._key}, 'children', {_key: element._key}]
       if (debugRenders) {
         debug(`Render ${element._key} (inline object)`)

@@ -172,7 +172,7 @@ export function createWithHotkeys(
           // Just ignore
         }
         // List item enter key
-        if (focusBlock && focusBlock.listItem) {
+        if (focusBlock && Element.isElement(focusBlock) && focusBlock.listItem) {
           if (editor.pteEndList()) {
             event.preventDefault()
           }
