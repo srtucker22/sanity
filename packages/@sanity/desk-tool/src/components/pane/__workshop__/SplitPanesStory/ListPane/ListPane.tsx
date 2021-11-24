@@ -10,11 +10,12 @@ import {ListPaneNode} from '../types'
 export function ListPane(props: {
   active: boolean
   childId?: string
+  debug: boolean
   index: number
   node: ListPaneNode
   setPath: React.Dispatch<React.SetStateAction<string[]>>
 }) {
-  const {active, childId, index, node, setPath} = props
+  const {active, childId, debug, index, node, setPath} = props
   const {collapsed: layoutCollapsed} = usePaneLayout()
 
   const handleBackClick = useCallback(() => {
@@ -22,7 +23,14 @@ export function ListPane(props: {
   }, [index, setPath])
 
   return (
-    <Pane currentMaxWidth={350} data-index={index} flex={1} minWidth={280}>
+    <Pane
+      currentMaxWidth={350}
+      data-index={index}
+      debug={debug}
+      flex={1}
+      minWidth={320}
+      maxWidth={640}
+    >
       <PaneHeader
         backButton={
           index > 0 &&
@@ -30,6 +38,7 @@ export function ListPane(props: {
         }
         title={node.title}
       />
+
       <PaneContent>
         <Stack padding={2} space={1}>
           {node.items.map((item) => (
