@@ -109,6 +109,7 @@ export function GroupChange({
                 ref={setRevertButtonRef}
                 selected={confirmRevertOpen}
                 disabled={readOnly}
+                data-testid={`group-change-revert-button-${group.fieldsetName}`}
               />
             </Box>
           </PopoverWrapper>
