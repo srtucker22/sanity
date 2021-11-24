@@ -88,13 +88,24 @@ export default (config = {}) => {
         ...rxPaths(),
         ...(config.isSanityMonorepo ? getMonorepoAliases() : {}),
       },
-      extensions: ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx'],
+      extensions: [
+        '.web.js',
+        '.web.ts',
+        '.web.tsx',
+        '.js',
+        '.jsx',
+        '.es6',
+        '.es',
+        '.mjs',
+        '.ts',
+        '.tsx',
+      ],
     },
     module: {
       rules: [
         {
           test: /(\.jsx?|\.tsx?)(\?|$)/,
-          exclude: /(node_modules|bower_components)/,
+          exclude: /(node_modules|bower_components)\/(?!@naviothera|@react-native-aria|native-base|react-native-safe-area-context).*/,
           use: {
             loader: require.resolve('babel-loader'),
             options: babelConfig || {
@@ -103,7 +114,10 @@ export default (config = {}) => {
                 require.resolve('@babel/preset-react'),
                 [require.resolve('@babel/preset-env'), require('./babel-env-config')],
               ],
-              plugins: [require.resolve('@babel/plugin-proposal-class-properties')].filter(Boolean),
+              plugins: [
+                require.resolve('@babel/plugin-proposal-object-rest-spread'),
+                require.resolve('@babel/plugin-proposal-class-properties'),
+              ].filter(Boolean),
               cacheDirectory: true,
             },
           },

@@ -20,6 +20,7 @@ export default (config) => {
       alias: Object.assign({}, baseConfig.resolve.alias, {
         'react-dom': getModulePath('@hot-loader/react-dom'),
         'webpack-hot-middleware/client': require.resolve('../browser/hot-client'),
+        'react-native$': 'react-native-web',
       }),
       extensions: baseConfig.resolve.extensions,
     },
