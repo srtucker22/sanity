@@ -1,3 +1,5 @@
+import sanityClient from '@sanity/client'
+
 Cypress.Commands.add('login', (sanitySessionToken) => {
   const token = sanitySessionToken || Cypress.env('SANITY_SESSION_TOKEN')
 
@@ -18,6 +20,17 @@ Cypress.Commands.add('login', (sanitySessionToken) => {
         domain: `.${domain}`,
       })
     })
+  })
+})
+
+Cypress.Commands.add('getSanityClient', () => {
+  const writeToken = Cypress.env('TEST_STUDIO_SANITY_WRITE_TOKEN')
+
+  return sanityClient({
+    projectId: 'ppsg7ml5',
+    dataset: 'test',
+    token: writeToken,
+    useCdn: false,
   })
 })
 

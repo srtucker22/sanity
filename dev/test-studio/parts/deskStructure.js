@@ -1,5 +1,5 @@
 import S from '@sanity/desk-tool/structure-builder'
-import {EarthGlobeIcon, PlugIcon, TagIcon, TerminalIcon} from '@sanity/icons'
+import {EarthGlobeIcon, PlugIcon, SyncIcon, TagIcon, TerminalIcon} from '@sanity/icons'
 import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
 import React from 'react'
 import schema from 'part:@sanity/base/schema'
@@ -83,6 +83,8 @@ const DEBUG_INPUT_TYPES = [
   'validationTest',
   'withDocumentTest',
 ]
+
+const CI_INPUT_TYPES = ['conditionalFieldset']
 
 const EXTERNAL_PLUGIN_INPUT_TYPES = ['markdownTest', 'muxVideoPost']
 
@@ -417,8 +419,18 @@ export default () =>
 
       S.divider(),
 
+      _buildTypeGroup({
+        icon: SyncIcon,
+        id: 'input-ci',
+        title: 'CI',
+        types: CI_INPUT_TYPES,
+      }),
+
+      S.divider(),
+
       ...S.documentTypeListItems().filter(
         (listItem) =>
+          !CI_INPUT_TYPES.includes(listItem.getId()) &&
           !DEBUG_INPUT_TYPES.includes(listItem.getId()) &&
           !STANDARD_INPUT_TYPES.includes(listItem.getId()) &&
           !STANDARD_PORTABLE_TEXT_INPUT_TYPES.includes(listItem.getId()) &&
