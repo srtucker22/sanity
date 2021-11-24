@@ -15,6 +15,7 @@ export interface DeskToolFeatures {
  * @internal
  */
 export interface DeskToolContextValue {
+  debug: boolean
   features: DeskToolFeatures
   layoutCollapsed: boolean
 }

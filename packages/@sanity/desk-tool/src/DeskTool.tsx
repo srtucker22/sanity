@@ -5,7 +5,7 @@ import React, {memo, Fragment, useState, useEffect, useCallback} from 'react'
 import styled from 'styled-components'
 import {PaneNode} from './types'
 import {PaneLayout} from './components/pane'
-import {LOADING_PANE} from './constants'
+import {DEBUG, LOADING_PANE} from './constants'
 import {DeskToolProvider} from './contexts/deskTool'
 import {useResolvedPanes} from './utils/useResolvedPanes'
 import {getIntentRouteParams, getWaitMessages, isSaveHotkey} from './helpers'
@@ -108,7 +108,7 @@ export const DeskTool = memo(({onPaneChange}: DeskToolProps) => {
   }, [pushToast])
 
   return (
-    <DeskToolProvider layoutCollapsed={layoutCollapsed}>
+    <DeskToolProvider debug={DEBUG} layoutCollapsed={layoutCollapsed}>
       <PortalProvider element={portalElement || null}>
         <StyledPaneLayout
           flex={1}
