@@ -1,5 +1,6 @@
 import {Flex, ToastProvider, PortalProvider} from '@sanity/ui'
 import React, {useState, useCallback} from 'react'
+import {useBoolean} from '@sanity/ui-workshop'
 import {PaneLayout} from '../../PaneLayout'
 import {DocumentPane} from './DocumentPane'
 import {ListPane} from './ListPane'
@@ -7,6 +8,7 @@ import {Navbar} from './Navbar'
 import {panes} from './config'
 
 export function SplitPanesStory() {
+  const debug = useBoolean('Debug', false) || false
   const [portalElement, setPortalElement] = useState<HTMLDivElement | null>(null)
   const [layoutCollapsed, setLayoutCollapsed] = useState(false)
   const [path, setPath] = useState(['root'])
@@ -26,6 +28,7 @@ export function SplitPanesStory() {
 
           <DeskTool
             collapsed={layoutCollapsed}
+            debug={debug}
             onExpand={handleExpand}
             onCollapse={handleCollapse}
             path={path}
@@ -41,12 +44,13 @@ export function SplitPanesStory() {
 
 function DeskTool(props: {
   collapsed: boolean
+  debug: boolean
   onExpand: () => void
   onCollapse: () => void
   path: string[]
   setPath: React.Dispatch<React.SetStateAction<string[]>>
 }) {
-  const {collapsed, onCollapse, onExpand, path, setPath} = props
+  const {collapsed, debug, onCollapse, onExpand, path, setPath} = props
 
   return (
     <PaneLayout
@@ -69,6 +73,7 @@ function DeskTool(props: {
             <ListPane
               active={i === path.length - 2}
               childId={path[i + 1]}
+              debug={debug}
               index={i}
               key={key}
               node={pane}
@@ -77,7 +82,7 @@ function DeskTool(props: {
           )
         }
 
-        return <DocumentPane index={i} key={key} node={pane} setPath={setPath} />
+        return <DocumentPane debug={debug} index={i} key={key} node={pane} setPath={setPath} />
       })}
     </PaneLayout>
   )

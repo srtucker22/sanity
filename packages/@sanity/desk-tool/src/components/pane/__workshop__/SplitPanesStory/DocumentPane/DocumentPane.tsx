@@ -7,11 +7,12 @@ import {DocumentViewPanel} from './DocumentViewPanel'
 import {ReviewChangesPanel} from './ReviewChangesPanel'
 
 export function DocumentPane(props: {
+  debug: boolean
   index: number
   node: DocumentPaneNode
   setPath: React.Dispatch<React.SetStateAction<string[]>>
 }) {
-  const {index, node, setPath} = props
+  const {debug, index, node, setPath} = props
   const {collapsed: layoutCollapsed} = usePaneLayout()
   const [reviewChanges, setReviewChanges] = useState(false)
   const toggleReviewChanges = useCallback(() => setReviewChanges((v) => !v), [])
@@ -26,7 +27,13 @@ export function DocumentPane(props: {
   }, [index, setPath])
 
   return (
-    <Pane data-index={index} flex={2.5} minWidth={reviewChanges ? 320 + 320 : 320}>
+    <Pane
+      currentMinWidth={reviewChanges ? 600 + 320 : 600}
+      data-index={index}
+      debug={debug}
+      flex={2.5}
+      minWidth={reviewChanges ? 320 + 320 : 320}
+    >
       <Flex flex={1} height="fill">
         <DocumentViewPanel
           onBackClick={handleBackClick}
