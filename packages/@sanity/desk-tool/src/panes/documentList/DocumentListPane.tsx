@@ -4,6 +4,7 @@ import {useShallowUnique} from '../../utils/useShallowUnique'
 import {useUnique} from '../../utils/useUnique'
 import {useDeskToolSetting} from '../../settings'
 import {BaseDeskToolPaneProps} from '../types'
+import {useDeskTool} from '../../contexts/deskTool'
 import {DEFAULT_ORDERING, EMPTY_RECORD} from './constants'
 import {getTypeNameFromSingleTypeFilter, isSimpleTypeFilter} from './helpers'
 import {DocumentListPaneContent} from './DocumentListPaneContent'
@@ -31,6 +32,7 @@ export const DocumentListPane = memo(function DocumentListPane(props: DocumentLi
   } = pane
 
   const {defaultOrdering = emptyArray, filter} = options
+  const {debug} = useDeskTool()
   const params = useShallowUnique(options.params || EMPTY_RECORD)
   const typeName = useMemo(() => getTypeNameFromSingleTypeFilter(filter, params), [filter, params])
   const showIcons = displayOptions?.showIcons !== false
@@ -55,6 +57,7 @@ export const DocumentListPane = memo(function DocumentListPane(props: DocumentLi
       currentMaxWidth={350}
       data-index={index}
       data-pane-key={paneKey}
+      debug={debug}
       maxWidth={640}
       minWidth={320}
       selected={isSelected}

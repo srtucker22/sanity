@@ -1,9 +1,10 @@
 import React, {createElement, isValidElement, useRef} from 'react'
 import {isValidElementType} from 'react-is'
 import {Pane} from '../../components/pane'
+import {useDeskTool} from '../../contexts/deskTool'
 import {usePaneRouter} from '../../contexts/paneRouter'
-import {BaseDeskToolPaneProps} from '../types'
 import {DeskToolPaneActionHandler} from '../../types'
+import {BaseDeskToolPaneProps} from '../types'
 import {UserComponentPaneHeader} from './UserComponentPaneHeader'
 import {UserComponentPaneContent} from './UserComponentPaneContent'
 
@@ -14,6 +15,7 @@ type UserComponentPaneProps = BaseDeskToolPaneProps<'component'>
  */
 export function UserComponentPane(props: UserComponentPaneProps) {
   const {index, pane, ...restProps} = props
+  const {debug} = useDeskTool()
   const {params} = usePaneRouter()
   const {
     component,
@@ -29,7 +31,7 @@ export function UserComponentPane(props: UserComponentPaneProps) {
   } | null>(null)
 
   return (
-    <Pane data-index={index} minWidth={320} selected={restProps.isSelected}>
+    <Pane data-index={index} debug={debug} minWidth={320} selected={restProps.isSelected}>
       <UserComponentPaneHeader
         actionHandlers={userComponent.current?.actionHandlers}
         index={index}
