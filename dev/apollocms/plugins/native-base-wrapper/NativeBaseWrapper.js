@@ -9,7 +9,7 @@ import {
 const NativeBaseWrapper = (props) => {
   return (
     <NativeBaseProvider theme={nativeDefaultTheme}>
-      <div style={{height: '100vh'}}>
+      <div style={{height: '100vh', zIndex: 0}}>
         <DefaultLayoutContainer {...props} />
       </div>
     </NativeBaseProvider>

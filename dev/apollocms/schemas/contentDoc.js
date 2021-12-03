@@ -19,7 +19,14 @@ export default {
     {
       name: 'content',
       type: 'array',
-      of: [{type: 'block'}, {type: 'image'}, {type: 'button'}],
+      of: [
+        {type: 'block'},
+        {type: 'image'},
+        {type: 'break'},
+        {type: 'button'},
+        {type: 'contentBlock'},
+        {type: 'reference', to: [{type: 'ContentDoc'}]},
+      ],
     },
   ],
 }
