@@ -30,6 +30,10 @@ export default {
       type: 'string',
     },
     {
+      name: 'fieldTitle',
+      type: 'string',
+    },
+    {
       name: 'description',
       type: 'string',
     },
